@@ -45,6 +45,13 @@ class _SplashScreenUiState extends State<SplashScreenUi> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              'Created by Worapart IT SAU',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,
             ),
