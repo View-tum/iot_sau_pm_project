@@ -16,7 +16,7 @@ class _SplashScreenUiState extends State<SplashScreenUi> {
       () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => SigninUi(),
+          builder: (context) => SigninUI(),
         ),
       ),
     );
@@ -25,7 +25,7 @@ class _SplashScreenUiState extends State<SplashScreenUi> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red[900],
+      backgroundColor: const Color.fromARGB(255, 56, 56, 56),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
