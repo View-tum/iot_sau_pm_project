@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iot_sau_pm_project/models/user.dart';
+import 'package:iot_sau_pm_project/sevices/call_user_api.dart';
 import 'package:iot_sau_pm_project/views/signup_ui.dart';
+import 'package:iot_sau_pm_project/views/home_ui.dart';
 
 class SigninUI extends StatefulWidget {
   const SigninUI({super.key});
@@ -11,6 +14,33 @@ class SigninUI extends StatefulWidget {
 class _SigninUIState extends State<SigninUI> {
   //สร้างตัวแปลเปิดปิดรหัสผ่าน
   bool pwdVisible = true;
+  TextEditingController userNameCtrl = TextEditingController();
+  TextEditingController userPasswordCtrl = TextEditingController();
+  void showWarningMSG(context, msg) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'คำเตือน',
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          msg,
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'ตกลง',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +81,7 @@ class _SigninUIState extends State<SigninUI> {
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 TextField(
+                  controller: userNameCtrl,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Username',
@@ -72,6 +103,7 @@ class _SigninUIState extends State<SigninUI> {
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 TextField(
+                  controller: userPasswordCtrl,
                   obscureText: pwdVisible,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -115,7 +147,31 @@ class _SigninUIState extends State<SigninUI> {
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (userNameCtrl.text.length == 0) {
+                      showWarningMSG(context, 'กรุณากรอกชื่อผู้ใช้');
+                    } else if (userPasswordCtrl.text.length == 0) {
+                      showWarningMSG(context, 'กรุณากรอกรหัสผ่าน');
+                    } else {
+                      User user = User(
+                        userName: userNameCtrl.text,
+                        userPassword: userPasswordCtrl.text,
+                      );
+                      CallUserAPI.CheckUserAPI(user).then((value) {
+                        if (value[0].message == "1") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeUi(),
+                            ),
+                          );
+                        } else {
+                          showWarningMSG(
+                              context, 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+                        }
+                      });
+                    }
+                  },
                   child: Text(
                     'Signin',
                     style: TextStyle(

@@ -24,4 +24,23 @@ class CallUserAPI {
       throw Exception('Failed to insert user' + responseData.toString());
     }
   }
+
+  //สร้างเมธอดเรียก API ที่ทำงานกับตาราง user_tb
+  static Future<List<User>> CheckUserAPI(User user) async {
+    final responseData = await http.get(
+        Uri.parse(Env.baseUrl +
+            '/check_user_api.php?userEmail=${user.userEmail}&userName=${user.userName}&userPassword=${user.userPassword}'),
+        headers: {'Content-Type': 'application/json'});
+
+    if (responseData.statusCode == 200 || responseData.statusCode == 404) {
+      //แปลงข้อมูล JSON ให้เป็น List<User> เพื่อให้สามารถใช้งานได้
+      final responseDataDecode = jsonDecode(responseData.body);
+      print(responseDataDecode);
+      final List<User> data =
+          await responseDataDecode.map<User>((e) => User.fromJson(e)).toList();
+      return data;
+    } else {
+      throw Exception('Failed to insert user' + responseData.toString());
+    }
+  }
 }
